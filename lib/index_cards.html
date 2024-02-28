@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation côté client</title>
+</head>
+<body>
+    <h1>Page d'accord du tout</h1>
+    <ul>
+        <li><a href="#/baniere">Bannière</a></li>
+        <li><a href="#/navbar">nave barre</a></li>
+        <li><a href="#/forgotten_password">mdp oublié</a></li>
+        <li><a href="#/footer">footer</a></li>
+        <li><a href="#/authentification">s'inscrire</a></li>
+        <li><a href="#/jumbotron_classic">Jumbotronlol</a></li>
+    </ul>
+
+    <div id="content"></div>
+
+    <script>
+        // Intercepte les clics sur les liens et affiche le contenu de la page correspondante
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault(); // Empêche la navigation par défaut
+
+                const pagePath = this.getAttribute('href').substring(2); // Extrait le chemin de la page à partir de l'attribut href
+                const content = document.getElementById('content');
+
+                // Récupère le contenu de la page à partir d'un fichier ou d'une autre source
+                fetch(pagePath + '.html')
+                    .then(response => response.text())
+                    .then(html => {
+                        content.innerHTML = html; // Met à jour le contenu de la page
+                        window.history.pushState({}, '', '#' + pagePath); // Modifie l'URL dans la barre d'adresse
+                    })
+                    .catch(error => console.error('Erreur de chargement de la page:', error));
+            });
+        });
+
+        // Gère les événements de modification de l'URL pour afficher le contenu correspondant
+        window.addEventListener('hashchange', function() {
+            const pagePath = window.location.hash.substring(2);
+            const content = document.getElementById('content');
+
+            // Récupère le contenu de la page à partir d'un fichier ou d'une autre source
+            fetch(pagePath + '.html')
+                .then(response => response.text())
+                .then(html => {
+                    content.innerHTML = html; // Met à jour le contenu de la page
+                })
+                .catch(error => console.error('Erreur de chargement de la page:', error));
+        });
+
+        // Charge la page initiale au chargement de la page
+        window.addEventListener('load', function() {
+            const pagePath = window.location.hash.substring(2);
+            const content = document.getElementById('content');
+
+            // Récupère le contenu de la page à partir d'un fichier ou d'une autre source
+            fetch(pagePath + '.html')
+                .then(response => response.text())
+                .then(html => {
+                    content.innerHTML = html; // Met à jour le contenu de la page
+                })
+                .catch(error => console.error('Erreur de chargement de la page:', error));
+        });
+    </script>
+</body>
+</html>
